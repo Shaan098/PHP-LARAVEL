@@ -20,3 +20,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/blog/{post}', [BlogController::class, 'update'])->name('blog.update');
     Route::delete('/blog/{post}', [BlogController::class, 'destroy'])->name('blog.destroy');
 });
+
+// Stub authentication routes (for layout navigation)
+Route::get('/login', function () {
+    return redirect('/blog');
+})->name('login');
+
+Route::get('/register', function () {
+    return redirect('/blog');
+})->name('register');
+
+Route::post('/logout', function () {
+    return redirect('/blog');
+})->name('logout');
