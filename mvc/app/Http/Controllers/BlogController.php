@@ -10,12 +10,42 @@ use Illuminate\Support\Str;
 class BlogController extends Controller
 {
     /**
-     * Display a listing of published blog posts.
+     * Display a listing of published blog posts with search and filtering.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::published()->paginate(10);
-        return view('blog.index', compact('posts'));
+        $query = Post::published();
+        
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%")
+                  ->orWhere('excerpt', 'like', "%{$search}%");
+            });
+        }
+        
+        // Filter by author
+        if ($request->filled('author')) {
+            $query->where('user_id', $request->input('author'));
+        }
+        
+        // Sort options
+        $sort = $request->input('sort', 'latest');
+        if ($sort === 'popular') {
+            $query->withCount('comments')
+                  ->orderByDesc('comments_count')
+                  ->orderByDesc('published_at');
+        } else {
+            $query->orderByDesc('published_at');
+        }
+        
+        $posts = $query->paginate(9);
+        $authors = Post::published()->with('author')->get()->pluck('author')->unique('id');
+        $popularPosts = Post::published()->withCount('comments')->orderByDesc('comments_count')->limit(5)->get();
+        
+        return view('blog.index', compact('posts', 'authors', 'popularPosts'));
     }
 
     /**

@@ -69,4 +69,14 @@ class Post extends Model
     {
         return $query->where('status', 'draft');
     }
+
+    /**
+     * Calculate estimated reading time in minutes.
+     */
+    public function getReadingTimeAttribute(): int
+    {
+        $wordCount = str_word_count(strip_tags($this->content));
+        $readingTime = ceil($wordCount / 200); // Average reading speed: 200 words per minute
+        return max(1, $readingTime);
+    }
 }

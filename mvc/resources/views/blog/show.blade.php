@@ -11,15 +11,24 @@
             
             <h1 class="text-4xl font-bold mb-4">{{ $post->title }}</h1>
             
-            <div class="flex items-center justify-between text-gray-600 mb-6">
+            <div class="flex flex-wrap items-center gap-4 text-gray-600 mb-6">
                 <div>
                     <strong>{{ $post->author->name }}</strong> • 
                     {{ $post->published_at->format('F d, Y') }}
                 </div>
                 
+                <div class="flex gap-3">
+                    <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">
+                        📖 {{ $post->reading_time }} min read
+                    </span>
+                    <span class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">
+                        💬 {{ $post->approvedComments()->count() }} comments
+                    </span>
+                </div>
+                
                 @auth
                     @if(auth()->user()->id === $post->user_id)
-                        <div class="flex gap-4">
+                        <div class="flex gap-4 ml-auto">
                             <a href="{{ route('blog.edit', $post) }}" class="text-blue-600 hover:text-blue-800">Edit</a>
                             <form action="{{ route('blog.destroy', $post) }}" method="POST" style="display:inline;">
                                 @csrf
