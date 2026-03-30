@@ -30,4 +30,20 @@ class PostPolicy
     {
         return $user->id === $post->user_id;
     }
+
+    /**
+     * Determine whether the user can like the post.
+     */
+    public function likePost(User $user, Post $post): bool
+    {
+        return true; // Any authenticated user can like posts
+    }
+
+    /**
+     * Determine whether the user can bookmark the post.
+     */
+    public function bookmarkPost(User $user, Post $post): bool
+    {
+        return true; // Any authenticated user can bookmark posts
+    }
 }
