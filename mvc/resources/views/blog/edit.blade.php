@@ -104,13 +104,7 @@
                     @if(isset($allTags))
                         @foreach($allTags as $tag)
                             <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-                                <input 
-                                    type="checkbox" 
-                                    name="tags[]" 
-                                    value="{{ $tag->id }}"
-                                    {{ in_array($tag->id, old('tags', $post->tags->pluck('id')->toArray())) ? 'checked' : '' }}
-                                    class="w-4 h-4 rounded"
-                                >
+                                <input type="checkbox" name="tags[]" value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', $post->tags->pluck('id')->toArray())) ? 'checked' : '' }} class="w-4 h-4 rounded">
                                 <span class="text-slate-900 dark:text-white text-sm">{{ $tag->name }}</span>
                             </label>
                         @endforeach
@@ -120,6 +114,20 @@
                     <p class="text-red-600 dark:text-red-400 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3 pt-4">
+                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                    Update Post
+                </button>
+                <a href="{{ route('blog.show', $post->slug) }}" class="flex-1 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white px-4 py-2 rounded-lg font-semibold transition-colors text-center">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
 
             <!-- Actions -->
             <div class="flex gap-3 pt-4">

@@ -1,6 +1,3 @@
-
-
-
 @extends('layouts.app')
 
 @section('content')
@@ -68,7 +65,12 @@
                 @enderror
             </div>
 
-
+            <!-- Tags -->
+            <div>
+                <label for="tags" class="block text-slate-900 dark:text-white font-semibold mb-2">Tags (Optional)</label>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Select or create tags to categorize your post</p>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    @if(isset($allTags))
                         @foreach($allTags as $tag)
                             <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
                                 <input type="checkbox" name="tags[]" value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }} class="w-4 h-4 rounded">
@@ -94,38 +96,4 @@
         </form>
     </div>
 </div>
-@endsection
-                <a href="{{ route('blog.index') }}" class="flex-1 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white px-4 py-2 rounded-lg font-semibold transition-colors text-center">
-                    Cancel
-                </a>
-            </div>
-        </form>
-    </div>
-</div>
-@endsection
-
-        e.preventDefault();
-        dropZone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
-        
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            fileInput.files = files;
-            handleFileSelect();
-        }
-    });
-
-    fileInput.addEventListener('change', handleFileSelect);
-
-    function handleFileSelect() {
-        const file = fileInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                imagePreview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-</script>
 @endsection
