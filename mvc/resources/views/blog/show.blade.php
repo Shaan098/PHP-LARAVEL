@@ -13,14 +13,14 @@
                 {{ $post->title }}
             </h1>
             
-            <div class="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400 mb-6 pb-6 border-b border-gray-200 dark:border-slate-700">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-slate-700">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
                         {{ substr($post->author->name, 0, 1) }}
                     </div>
                     <div>
                         <p class="font-semibold text-slate-900 dark:text-white text-sm">{{ $post->author->name }}</p>
-                        <p class="text-xs">{{ $post->published_at->format('M d, Y') }}</p>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">{{ $post->published_at->format('M d, Y') }}</p>
                     </div>
                 </div>
                 
@@ -31,11 +31,25 @@
                     <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 py-1 rounded">
                         💬 {{ $post->approvedComments()->count() }}
                     </span>
+                    @if($post->like_count > 0)
+                        <span class="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-2 py-1 rounded">
+                            ❤️ {{ $post->like_count }}
+                        </span>
+                    @endif
                 </div>
                 
-                @auth
-                    @if(auth()->user()->id === $post->user_id)
-                        <div class="flex gap-2 ml-auto">
+                <div class="flex gap-2 items-center">
+                    @auth
+                        <form action="{{ route('blog.bookmark', $post) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">
+                                📚 Bookmark
+                            </button>
+                        </form>
+                    @endauth
+                    
+                    @auth
+                        @if(auth()->user()->id === $post->user_id)
                             <a href="{{ route('blog.edit', $post) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">
                                 ✏️ Edit
                             </a>
@@ -46,9 +60,9 @@
                                     🗑️ Delete
                                 </button>
                             </form>
-                        </div>
-                    @endif
-                @endauth
+                        @endif
+                    @endauth
+                </div>
             </div>
         </div>
 
@@ -70,6 +84,31 @@
                 Published by <strong class="text-slate-900 dark:text-white">{{ $post->author->name }}</strong> with {{ $post->author->posts()->published()->count() }} posts
             </p>
         </div>
+
+        <!-- Tags -->
+        @if($post->tags->count())
+            <div class="mb-8">
+                <div class="flex flex-wrap gap-2">
+                    @foreach($post->tags as $tag)
+                        <a href="{{ route('blog.index', ['tag' => $tag->id]) }}" class="inline-block bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors">
+                            #{{ $tag->name }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        <!-- Like Button -->
+        @auth
+            <div class="mb-8">
+                <form action="{{ route('blog.like', $post) }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                        ❤️ Like ({{ $post->like_count ?? 0 }})
+                    </button>
+                </form>
+            </div>
+        @endauth
 
         <!-- Comments Section -->
         <section>

@@ -40,20 +40,33 @@
                     @endforeach
                 </select>
                 
+                <!-- Filter by Tags -->
+                <select name="tag" class="px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    <option value="">🏷️ All Tags</option>
+                    @foreach($tags as $tag)
+                        <option value="{{ $tag->id }}" {{ request('tag') == $tag->id ? 'selected' : '' }}>
+                            {{ $tag->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <!-- Sort Options -->
                 <select name="sort" class="px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                     <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>⏱️ Latest First</option>
                     <option value="popular" {{ request('sort') === 'popular' ? 'selected' : '' }}>🔥 Most Popular</option>
+                    <option value="trending" {{ request('sort') === 'trending' ? 'selected' : '' }}>⚡ Trending</option>
                 </select>
-            </div>
-            
-            <div class="flex gap-2">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                    🔍 Search
-                </button>
-                <a href="{{ route('blog.index') }}" class="bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-800 dark:text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                    ↻ Reset
-                </a>
+                
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex-1">
+                        🔍 Search
+                    </button>
+                    <a href="{{ route('blog.index') }}" class="bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-800 dark:text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                        ↻ Reset
+                    </a>
+                </div>
             </div>
         </form>
     </div>
@@ -93,6 +106,21 @@
                                 <p class="text-gray-700 dark:text-gray-300 text-sm mb-3 line-clamp-2">
                                     {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 80) }}
                                 </p>
+
+                                @if($post->tags->count())
+                                    <div class="flex flex-wrap gap-1 mb-3">
+                                        @foreach($post->tags->take(2) as $tag)
+                                            <span class="text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+                                                #{{ $tag->name }}
+                                            </span>
+                                        @endforeach
+                                        @if($post->tags->count() > 2)
+                                            <span class="text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+                                                +{{ $post->tags->count() - 2 }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
                                 
                                 <div class="flex justify-between items-center pt-3 border-t border-gray-100 dark:border-slate-700">
                                     <a href="{{ route('blog.show', $post->slug) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-semibold transition-colors">

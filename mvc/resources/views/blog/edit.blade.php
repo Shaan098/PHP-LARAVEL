@@ -96,6 +96,31 @@
                 @enderror
             </div>
 
+            <!-- Tags -->
+            <div>
+                <label for="tags" class="block text-slate-900 dark:text-white font-semibold mb-2">Tags (Optional)</label>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Select or create tags to categorize your post</p>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    @if(isset($allTags))
+                        @foreach($allTags as $tag)
+                            <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+                                <input 
+                                    type="checkbox" 
+                                    name="tags[]" 
+                                    value="{{ $tag->id }}"
+                                    {{ in_array($tag->id, old('tags', $post->tags->pluck('id')->toArray())) ? 'checked' : '' }}
+                                    class="w-4 h-4 rounded"
+                                >
+                                <span class="text-slate-900 dark:text-white text-sm">{{ $tag->name }}</span>
+                            </label>
+                        @endforeach
+                    @endif
+                </div>
+                @error('tags')
+                    <p class="text-red-600 dark:text-red-400 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Actions -->
             <div class="flex gap-3 pt-4">
                 <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
@@ -109,25 +134,19 @@
     </div>
 </div>
 @endsection
-
-            <!-- Content -->
-            <div>
-                <label for="content" class="block text-gray-900 dark:text-white font-semibold mb-3 text-lg">Content</label>
-                <textarea 
-                    id="content" 
-                    name="content" 
-                    rows="16"
-                    class="w-full px-4 py-3 border-2 border-gray-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900 transition-all duration-200 font-mono @error('content') border-red-500 @enderror" 
-                    placeholder="Write your amazing content here..." 
-                    required
-                >{{ old('content', $post->content) }}</textarea>
-                <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">💡 Tip: Keep your content engaging and original</p>
-                @error('content')
-                    <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-semibold">{{ $message }}</p>
-                @enderror
+                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                    Update Post
+                </button>
+                <a href="{{ route('blog.show', $post->slug) }}" class="flex-1 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white px-4 py-2 rounded-lg font-semibold transition-colors text-center">
+                    Cancel
+                </a>
             </div>
+        </form>
+    </div>
+</div>
+@endsection
 
-            <!-- Featured Image -->
+
             <div>
                 <label for="featured_image" class="block text-gray-900 dark:text-white font-semibold mb-3 text-lg">Featured Image</label>
                 
