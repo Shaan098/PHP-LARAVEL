@@ -1,25 +1,202 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-12">
     <!-- Header -->
-    <div class="mb-12 animate-fade-in-up">
+    <div class="mb-12">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
             <div>
-                <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                <h1 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2">
                     Discover Stories
                 </h1>
-                <p class="text-gray-600 dark:text-gray-400 text-lg">Explore insightful articles from our community</p>
+                <p class="text-gray-600 dark:text-gray-400">Explore articles from our community</p>
             </div>
             @auth
-                <a href="{{ route('blog.create') }}" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-semibold btn-transition shadow-lg hover:shadow-xl whitespace-nowrap">
+                <a href="{{ route('blog.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold btn-transition shadow-md hover:shadow-lg whitespace-nowrap">
                     ✍️ Write a Post
                 </a>
             @endauth
         </div>
 
         <!-- Search & Filters -->
-        <form method="GET" action="{{ route('blog.index') }}" class="mb-8 p-6 bg-white dark:bg-slate-900 rounded-xl shadow-lg dark:shadow-2xl">
+        <form method="GET" action="{{ route('blog.index') }}" class="bg-white dark:bg-slate-900 p-5 rounded-lg border border-gray-200 dark:border-slate-700 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <!-- Search Bar -->
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="🔍 Search posts..." 
+                    value="{{ request('search') }}"
+                    class="px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                >
+                
+                <!-- Filter by Author -->
+                <select name="author" class="px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    <option value="">👥 All Authors</option>
+                    @foreach($authors as $author)
+                        <option value="{{ $author->id }}" {{ request('author') == $author->id ? 'selected' : '' }}>
+                            {{ $author->name }}
+                        </option>
+                    @endforeach
+                </select>
+                
+                <!-- Sort Options -->
+                <select name="sort" class="px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>⏱️ Latest First</option>
+                    <option value="popular" {{ request('sort') === 'popular' ? 'selected' : '' }}>🔥 Most Popular</option>
+                </select>
+            </div>
+            
+            <div class="flex gap-2">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                    🔍 Search
+                </button>
+                <a href="{{ route('blog.index') }}" class="bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-800 dark:text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                    ↻ Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2">
+            <!-- Posts Grid -->
+            @if($posts->count())
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    @foreach($posts as $post)
+                        <article class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-shadow">
+                            <div class="relative h-40 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-900/50 overflow-hidden">
+                                @if($post->featured_image)
+                                    <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                                @else
+                                    <div class="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                                @endif
+                                <div class="absolute top-3 right-3">
+                                    <span class="bg-white/90 dark:bg-slate-800/90 text-slate-900 dark:text-white text-xs px-2 py-1 rounded-full font-semibold">
+                                        📖 {{ $post->reading_time }} min
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="p-4">
+                                <h2 class="text-lg font-bold mb-2 line-clamp-2">
+                                    <a href="{{ route('blog.show', $post->slug) }}" class="text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                        {{ $post->title }}
+                                    </a>
+                                </h2>
+                                
+                                <p class="text-gray-600 dark:text-gray-400 text-xs mb-2">
+                                    <strong>{{ $post->author->name }}</strong> • {{ $post->published_at->format('M d, Y') }}
+                                </p>
+                                
+                                <p class="text-gray-700 dark:text-gray-300 text-sm mb-3 line-clamp-2">
+                                    {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 80) }}
+                                </p>
+                                
+                                <div class="flex justify-between items-center pt-3 border-t border-gray-100 dark:border-slate-700">
+                                    <a href="{{ route('blog.show', $post->slug) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-semibold transition-colors">
+                                        Read More →
+                                    </a>
+                                    <span class="text-gray-500 dark:text-gray-400 text-xs">
+                                        💬 {{ $post->comments()->approved()->count() }}
+                                    </span>
+                                </div>
+
+                                @auth
+                                    @if(auth()->user()->id === $post->user_id)
+                                        <div class="flex gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-slate-700">
+                                            <a href="{{ route('blog.edit', $post) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 text-xs">✏️ Edit</a>
+                                            <form action="{{ route('blog.destroy', $post) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-700 text-xs" onclick="return confirm('Delete?')">🗑️ Delete</button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                @endauth
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+
+                <div class="mt-8">
+                    {{ $posts->appends(request()->query())->links() }}
+                </div>
+            @else
+                <div class="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200 px-6 py-8 rounded-lg text-center">
+                    <p class="text-lg font-semibold mb-2">📭 No posts found</p>
+                    <p class="mb-4 text-sm">Try adjusting your search or filters</p>
+                </div>
+            @endif
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1 space-y-5">
+            <!-- Popular Posts -->
+            <div class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
+                <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-white">🔥 Popular</h3>
+                <ul class="space-y-3">
+                    @forelse($popularPosts as $i => $post)
+                        <li class="pb-3 border-b border-gray-100 dark:border-slate-700 last:border-0">
+                            <div class="flex gap-2">
+                                <span class="text-lg font-bold text-blue-600 dark:text-blue-400 min-w-fit">{{ $i + 1 }}</span>
+                                <div class="min-w-0">
+                                    <a href="{{ route('blog.show', $post->slug) }}" class="text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-semibold text-sm line-clamp-2 block">
+                                        {{ $post->title }}
+                                    </a>
+                                    <p class="text-gray-500 dark:text-gray-400 text-xs">{{ $post->comments_count }} 💬</p>
+                                </div>
+                            </div>
+                        </li>
+                    @empty
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">No posts yet</p>
+                    @endforelse
+                </ul>
+            </div>
+
+            <!-- Recent Authors -->
+            <div class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
+                <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-white">✍️ Authors</h3>
+                <div class="space-y-3">
+                    @forelse($authors->take(5) as $author)
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                {{ substr($author->name, 0, 1) }}
+                            </div>
+                            <div class="min-w-0">
+                                <p class="font-semibold text-slate-900 dark:text-white text-sm">{{ $author->name }}</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-xs">{{ $author->posts()->published()->count() }} posts</p>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">No authors</p>
+                    @endforelse
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="bg-blue-600 dark:bg-blue-700 rounded-lg p-4 text-white">
+                <h3 class="font-bold mb-3">📊 Stats</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span>Posts</span>
+                        <strong>{{ App\Models\Post::published()->count() }}</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Comments</span>
+                        <strong>{{ App\Models\Comment::where('status', 'approved')->count() }}</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Authors</span>
+                        <strong>{{ App\Models\User::whereHas('posts', function($q) { $q->published(); })->count() }}</strong>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+@endsection
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <!-- Search Bar -->
                 <div class="relative">
