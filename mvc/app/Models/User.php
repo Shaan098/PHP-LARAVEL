@@ -23,6 +23,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'bio',
+        'avatar_url',
+        'website',
     ];
 
     /**
@@ -54,5 +57,21 @@ class User extends Authenticatable
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Get the bookmarks for the user.
+     */
+    public function bookmarks(): HasMany
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+
+    /**
+     * Get the likes for the user.
+     */
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
     }
 }

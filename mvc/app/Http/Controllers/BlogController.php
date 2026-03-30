@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\Tag;
+use App\Models\Bookmark;
+use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -30,6 +33,14 @@ class BlogController extends Controller
         if ($request->filled('author')) {
             $query->where('user_id', $request->input('author'));
         }
+
+        // Filter by tag
+        if ($request->filled('tag')) {
+            $tag = Tag::where('slug', $request->input('tag'))->firstOrFail();
+            $query->whereHas('tags', function ($q) use ($tag) {
+                $q->where('tag_id', $tag->id);
+            });
+        }
         
         // Sort options
         $sort = $request->input('sort', 'latest');
@@ -37,15 +48,20 @@ class BlogController extends Controller
             $query->withCount('comments')
                   ->orderByDesc('comments_count')
                   ->orderByDesc('published_at');
+        } elseif ($sort === 'trending') {
+            $query->withCount('likes')
+                  ->orderByDesc('likes_count')
+                  ->orderByDesc('published_at');
         } else {
             $query->orderByDesc('published_at');
         }
         
         $posts = $query->paginate(9);
         $authors = Post::published()->with('author')->get()->pluck('author')->unique('id');
+        $tags = Tag::withCount('posts')->orderByDesc('posts_count')->limit(10)->get();
         $popularPosts = Post::published()->withCount('comments')->orderByDesc('comments_count')->limit(5)->get();
         
-        return view('blog.index', compact('posts', 'authors', 'popularPosts'));
+        return view('blog.index', compact('posts', 'authors', 'tags', 'popularPosts'));
     }
 
     /**
@@ -164,5 +180,56 @@ class BlogController extends Controller
         Comment::create($validated);
 
         return redirect()->route('blog.show', $post->slug)->with('success', 'Comment posted successfully!');
+    }
+
+    /**
+     * Like/Unlike a post and optionally rate it.
+     */
+    public function likePost(Request $request, Post $post)
+    {
+        $this->authorize('likePost', $post);
+
+        $validated = $request->validate([
+            'rating' => 'nullable|integer|min:1|max:5',
+        ]);
+
+        $like = Like::where('user_id', auth()->id())->where('post_id', $post->id)->first();
+
+        if ($like) {
+            // Toggle like/unlike
+            $like->delete();
+            return back()->with('success', 'Post unliked!');
+        } else {
+            // Create new like
+            Like::create([
+                'user_id' => auth()->id(),
+                'post_id' => $post->id,
+                'rating' => $validated['rating'] ?? null,
+            ]);
+            return back()->with('success', 'Post liked!');
+        }
+    }
+
+    /**
+     * Bookmark a post.
+     */
+    public function bookmarkPost(Post $post)
+    {
+        $this->authorize('bookmarkPost', $post);
+
+        $bookmark = Bookmark::where('user_id', auth()->id())
+            ->where('post_id', $post->id)
+            ->first();
+
+        if ($bookmark) {
+            $bookmark->delete();
+            return back()->with('success', 'Bookmark removed!');
+        } else {
+            Bookmark::create([
+                'user_id' => auth()->id(),
+                'post_id' => $post->id,
+            ]);
+            return back()->with('success', 'Post bookmarked!');
+        }
     }
 }

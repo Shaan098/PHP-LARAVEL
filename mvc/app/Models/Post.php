@@ -79,4 +79,45 @@ class Post extends Model
         $readingTime = ceil($wordCount / 200); // Average reading speed: 200 words per minute
         return max(1, $readingTime);
     }
+
+    /**
+     * Get the tags for this post.
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * Get the bookmarks for this post.
+     */
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+
+    /**
+     * Get the likes/ratings for this post.
+     */
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    /**
+     * Get average rating.
+     */
+    public function getAverageRatingAttribute()
+    {
+        $avgRating = $this->likes()->whereNotNull('rating')->avg('rating');
+        return $avgRating ? round($avgRating, 1) : 0;
+    }
+
+    /**
+     * Get like count.
+     */
+    public function getLikeCountAttribute()
+    {
+        return $this->likes()->count();
+    }
 }
