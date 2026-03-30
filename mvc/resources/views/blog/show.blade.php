@@ -1,37 +1,148 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <article class="max-w-4xl mx-auto animate-fade-in-up">
+<div class="container mx-auto px-4 py-12">
+    <article class="max-w-3xl mx-auto">
         <!-- Header -->
         <div class="mb-8">
-            <a href="{{ route('blog.index') }}" class="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-6 font-semibold transition-colors">
+            <a href="{{ route('blog.index') }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4 inline-block font-semibold transition-colors">
                 ← Back to Blog
             </a>
             
-            <h1 class="text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-4">
                 {{ $post->title }}
             </h1>
             
-            <div class="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400 mb-6 pb-6 border-b-2 border-gray-200 dark:border-slate-700">
+            <div class="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400 mb-6 pb-6 border-b border-gray-200 dark:border-slate-700">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
                         {{ substr($post->author->name, 0, 1) }}
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-900 dark:text-white">{{ $post->author->name }}</p>
-                        <p class="text-sm">{{ $post->published_at->format('F d, Y') }}</p>
+                        <p class="font-semibold text-slate-900 dark:text-white text-sm">{{ $post->author->name }}</p>
+                        <p class="text-xs">{{ $post->published_at->format('M d, Y') }}</p>
                     </div>
                 </div>
                 
-                <div class="flex flex-wrap gap-3">
-                    <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-sm px-4 py-2 rounded-full font-semibold">
-                        📖 {{ $post->reading_time }} min read
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded">
+                        📖 {{ $post->reading_time }} min
                     </span>
-                    <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-sm px-4 py-2 rounded-full font-semibold">
-                        💬 {{ $post->approvedComments()->count() }} comments
+                    <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 py-1 rounded">
+                        💬 {{ $post->approvedComments()->count() }}
                     </span>
                 </div>
+                
+                @auth
+                    @if(auth()->user()->id === $post->user_id)
+                        <div class="flex gap-2 ml-auto">
+                            <a href="{{ route('blog.edit', $post) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">
+                                ✏️ Edit
+                            </a>
+                            <form action="{{ route('blog.destroy', $post) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-semibold transition-colors" onclick="return confirm('Delete?')">
+                                    🗑️ Delete
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                @endauth
+            </div>
+        </div>
+
+        <!-- Featured Image -->
+        @if($post->featured_image)
+            <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full rounded-lg shadow-md mb-8 hover:shadow-lg transition-shadow">
+        @else
+            <div class="w-full h-72 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg shadow-md mb-8"></div>
+        @endif
+
+        <!-- Content -->
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-lg mb-8 leading-relaxed text-gray-700 dark:text-gray-300 prose dark:prose-invert max-w-none">
+            {!! nl2br(e($post->content)) !!}
+        </div>
+
+        <!-- Author Card -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-4 rounded-lg mb-8">
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+                Published by <strong class="text-slate-900 dark:text-white">{{ $post->author->name }}</strong> with {{ $post->author->posts()->published()->count() }} posts
+            </p>
+        </div>
+
+        <!-- Comments Section -->
+        <section>
+            <h2 class="text-2xl font-bold mb-6 text-slate-900 dark:text-white">
+                💬 Comments ({{ $post->approvedComments()->count() }})
+            </h2>
+
+            <!-- Comments List -->
+            @if($comments->count())
+                <div class="space-y-4 mb-8">
+                    @foreach($comments as $comment)
+                        <div class="bg-white dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-700">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                                        {{ substr($comment->user?->name ?? $comment->name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <strong class="text-slate-900 dark:text-white text-sm">{{ $comment->user?->name ?? $comment->name }}</strong>
+                                        <p class="text-gray-500 dark:text-gray-400 text-xs">{{ $comment->created_at->diffForHumans() }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-gray-700 dark:text-gray-300 text-sm">{{ $comment->content }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-gray-600 dark:text-gray-400 mb-8">No comments yet. Be the first!</p>
+            @endif
+
+            <!-- Comment Form -->
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-lg border border-gray-200 dark:border-slate-700">
+                <h3 class="text-lg font-bold mb-4 text-slate-900 dark:text-white">Leave a Comment</h3>
+
+                @auth
+                    <form action="{{ route('blog.comments.store', $post) }}" method="POST" class="space-y-3">
+                        @csrf
+                        <textarea name="content" placeholder="Share your thoughts..." class="w-full p-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" required></textarea>
+                        
+                        @error('content')
+                            <p class="text-red-600 dark:text-red-400 text-sm">{{ $message }}</p>
+                        @enderror
+                        
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                            Post Comment
+                        </button>
+                    </form>
+                @else
+                    <form action="{{ route('blog.comments.store', $post) }}" method="POST" class="space-y-3">
+                        @csrf
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <input type="text" name="name" placeholder="Your Name" class="p-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <input type="email" name="email" placeholder="Your Email" class="p-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        
+                        <textarea name="content" placeholder="Share your thoughts..." class="w-full p-3 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" required></textarea>
+                        
+                        @error('content')
+                            <p class="text-red-600 dark:text-red-400 text-sm">{{ $message }}</p>
+                        @enderror
+                        
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                            Post Comment
+                        </button>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Guest comments are pending approval</p>
+                    </form>
+                @endauth
+            </div>
+        </section>
+    </article>
+</div>
+@endsection
                 
                 @auth
                     @if(auth()->user()->id === $post->user_id)
