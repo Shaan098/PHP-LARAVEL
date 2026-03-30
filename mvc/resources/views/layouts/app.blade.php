@@ -102,15 +102,15 @@
     </script>
 
     <!-- Navigation -->
-    <nav class="bg-white dark:bg-slate-900 shadow-lg dark:shadow-2xl sticky top-0 z-50 animate-slide-in-down">
+    <nav class="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 sticky top-0 z-50 animate-slide-in-down">
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-8">
-                    <a href="{{ route('blog.index') }}" class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-purple-700 transition-all duration-300">
+                    <a href="{{ route('blog.index') }}" class="text-2xl font-bold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                         ✍️ Blog
                     </a>
                     <div class="hidden md:flex gap-6">
-                        <a href="{{ route('blog.index') }}" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200">
+                        <a href="{{ route('blog.index') }}" class="text-gray-600 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors duration-200">
                             All Posts
                         </a>
                     </div>
@@ -128,9 +128,9 @@
                     </button>
 
                     @if(auth()->check())
-                        <span class="text-gray-600 dark:text-gray-300 hidden sm:inline">👤 <strong>{{ auth()->user()->name }}</strong></span>
-                        <a href="{{ route('blog.create') }}" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium btn-transition shadow-lg hover:shadow-xl">
-                            ✍️ Write Post
+                        <span class="text-gray-600 dark:text-gray-300 hidden sm:inline text-sm">👤 <strong>{{ auth()->user()->name }}</strong></span>
+                        <a href="{{ route('blog.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium btn-transition shadow-md hover:shadow-lg">
+                            ✍️ Write
                         </a>
                     @else
                         <span class="text-gray-500 dark:text-gray-400 text-sm italic">👤 Guest</span>
@@ -165,26 +165,26 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 text-white mt-20 py-12">
+    <footer class="bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 mt-20 py-12">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                 <div>
-                    <h3 class="text-lg font-bold mb-4">📝 Blog</h3>
-                    <p class="text-gray-400">A modern blog platform built with Laravel.</p>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">📝 Blog</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">A modern blog platform built with Laravel.</p>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Quick Links</h3>
                     <ul class="space-y-2">
-                        <li><a href="{{ route('blog.index') }}" class="text-gray-400 hover:text-white transition">All Posts</a></li>
+                        <li><a href="{{ route('blog.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white text-sm transition">All Posts</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold mb-4">About</h3>
-                    <p class="text-gray-400 text-sm">Built with <span class="text-red-500">❤️</span> using Laravel & Tailwind</p>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">About</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Built with <span class="text-red-500">❤️</span> using Laravel</p>
                 </div>
             </div>
-            <div class="border-t border-gray-700 pt-8 text-center">
-                <p class="text-gray-400">&copy; {{ date('Y') }} Blog. All rights reserved.</p>
+            <div class="border-t border-gray-200 dark:border-slate-800 pt-8 text-center">
+                <p class="text-gray-600 dark:text-gray-400 text-sm">&copy; {{ date('Y') }} Blog. All rights reserved.</p>
             </div>
         </div>
     </footer>
