@@ -9,9 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 class middleware1
 {
     /*
-     * Handle an incoming request
+     * Handle an incoming request.
      *
-     * @param  Closure(Request): (Response)  $nex
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {

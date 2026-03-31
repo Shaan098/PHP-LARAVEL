@@ -5,74 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', config('app.name', 'Laravel')) - Blog</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
-        * {
+        html, body, * {
             font-family: 'Inter', sans-serif;
         }
 
         /* Smooth transitions */
         body {
-            transition: background-color 0.3s ease, color 0.3s ease;
+            @apply transition-colors duration-300;
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-            }
-        }
-
+        /* Tailwind animations with custom variants */
         .animate-fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .animate-slide-in-down {
-            animation: slideInDown 0.5s ease-out;
+            @apply animate-pulse;
         }
 
         .article-card {
-            transition: all 0.3s ease;
-        }
-
-        .article-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-2;
         }
 
         .btn-transition {
-            transition: all 0.2s ease;
-        }
-
-        .btn-transition:hover {
-            transform: scale(1.05);
+            @apply transition-all duration-200 hover:scale-105;
         }
 
         /* Dark mode support */
@@ -83,15 +39,9 @@
         html.dark {
             color-scheme: dark;
         }
-
-        html.dark {
-            --color-bg: #0f172a;
-            --color-surface: #1e293b;
-            --color-border: #334155;
-        }
     </style>
 </head>
-<body class="bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 text-slate-900 dark:text-slate-100">
     <!-- Dark Mode Toggle Script -->
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
