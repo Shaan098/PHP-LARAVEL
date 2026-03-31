@@ -96,20 +96,34 @@
 
     <!-- Flash Messages -->
     @if ($message = session('success'))
-        <div class="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 text-green-700 dark:text-green-300 p-4 mb-4 animate-fade-in-up">
-            <p class="font-bold">✅ Success</p>
-            <p>{{ $message }}</p>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-l-4 border-green-500 dark:border-green-400 text-green-700 dark:text-green-300 p-4 rounded-r-lg shadow-md animate-bounce">
+                <div class="flex items-center gap-3">
+                    <span class="text-xl">✅</span>
+                    <div>
+                        <p class="font-bold text-lg">Success</p>
+                        <p class="text-sm">{{ $message }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 
     @if ($errors->any())
-        <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 text-red-700 dark:text-red-300 p-4 mb-4 animate-fade-in-up">
-            <p class="font-bold">❌ Errors</p>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            <div class="bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-l-4 border-red-500 dark:border-red-400 text-red-700 dark:text-red-300 p-4 rounded-r-lg shadow-md animate-bounce">
+                <div class="flex items-center gap-3">
+                    <span class="text-xl">❌</span>
+                    <div>
+                        <p class="font-bold text-lg">Errors Occurred</p>
+                        <ul class="text-sm space-y-1 mt-1">
+                            @foreach ($errors->all() as $error)
+                                <li>• {{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 
@@ -119,26 +133,39 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 mt-20 py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-24 py-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">📝 Blog</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">A modern blog platform built with Laravel.</p>
+                    <h3 class="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">📝 Blog</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">A modern blog platform built with Laravel and Tailwind CSS for beautiful, responsive design.</p>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Quick Links</h3>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">Navigation</h3>
                     <ul class="space-y-2">
-                        <li><a href="{{ route('blog.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white text-sm transition">All Posts</a></li>
+                        <li><a href="{{ route('blog.index') }}" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors duration-200">📖 All Posts</a></li>
+                        @auth
+                            <li><a href="{{ route('blog.create') }}" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors duration-200">✍️ Write Post</a></li>
+                        @endauth
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">About</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">Built with <span class="text-red-500">❤️</span> using Laravel</p>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://laravel.com" target="_blank" rel="noopener noreferrer" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors duration-200">Laravel Docs</a></li>
+                        <li><a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors duration-200">Tailwind CSS</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">About</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Built with <span class="text-red-500 font-bold">❤️</span> using <span class="font-semibold">Laravel</span> & <span class="font-semibold">Tailwind</span></p>
                 </div>
             </div>
-            <div class="border-t border-gray-200 dark:border-slate-800 pt-8 text-center">
-                <p class="text-gray-600 dark:text-gray-400 text-sm">&copy; {{ date('Y') }} Blog. All rights reserved.</p>
+            <div class="border-t border-slate-200 dark:border-slate-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">&copy; {{ date('Y') }} Blog. All rights reserved.</p>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Made with Tailwind CSS</p>
+                </div>
             </div>
         </div>
     </footer>
