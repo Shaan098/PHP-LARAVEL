@@ -52,43 +52,47 @@
     </script>
 
     <!-- Navigation -->
-    <nav class="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 sticky top-0 z-50 animate-slide-in-down">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex justify-between items-center">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
                 <div class="flex items-center gap-8">
-                    <a href="{{ route('blog.index') }}" class="text-2xl font-bold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    <a href="{{ route('blog.index') }}" class="group text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-purple-700 transition-all duration-300">
                         ✍️ Blog
                     </a>
                     <div class="hidden md:flex gap-6">
-                        <a href="{{ route('blog.index') }}" class="text-gray-600 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors duration-200">
+                        <a href="{{ route('blog.index') }}" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors duration-200 relative group">
                             All Posts
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
                         </a>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3 sm:gap-4">
                     <!-- Dark Mode Toggle -->
-                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors duration-200 btn-transition" title="Toggle dark mode">
+                    <button id="theme-toggle" class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 hover:shadow-md" title="Toggle dark mode" aria-label="Toggle dark mode">
                         <svg id="light-icon" class="w-5 h-5 text-yellow-500 hidden" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l-2.12-2.12a1 1 0 00-1.414 0l-.707.707a1 1 0 000 1.414l2.12 2.12a1 1 0 001.414 0l.707-.707a1 1 0 000-1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM9 4a1 1 0 100-2 1 1 0 000 2zm6.071-2.071a1 1 0 11-1.414 1.414L15.07 1.929a1 1 0 011.414-1.414l-.707.707zm0 9.899a1 1 0 111.414-1.414l.707.707a1 1 0 11-1.414 1.414l-.707-.707zM4.464 4.465a1 1 0 011.414 0L7.07 1.858a1 1 0 00-1.414-1.414L3.05 3.05a1 1 0 000 1.414zm2.12 10.607a1 1 0 010-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414 0zM17 11a1 1 0 100 2 1 1 0 000-2zm-7 4a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd" />
                         </svg>
-                        <svg id="dark-icon" class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg id="dark-icon" class="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
                         </svg>
                     </button>
 
                     @if(auth()->check())
-                        <span class="text-gray-600 dark:text-gray-300 hidden sm:inline text-sm">👤 <strong>{{ auth()->user()->name }}</strong></span>
-                        <a href="{{ route('blog.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium btn-transition shadow-md hover:shadow-lg">
-                            ✍️ Write
+                        <span class="text-slate-600 dark:text-slate-400 hidden sm:inline text-sm font-medium">👤 {{ auth()->user()->name }}</span>
+                        <a href="{{ route('blog.create') }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/30">
+                            ✍️ <span class="hidden sm:inline">Write</span>
                         </a>
                     @else
-                        <span class="text-gray-500 dark:text-gray-400 text-sm italic">👤 Guest</span>
+                        <span class="text-slate-500 dark:text-slate-500 text-sm italic">👤 Guest</span>
                     @endif
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Spacer for fixed navbar -->
+    <div class="h-16"></div>
 
     <!-- Flash Messages -->
     @if ($message = session('success'))
