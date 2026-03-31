@@ -225,9 +225,7 @@
     </div>
 </div>
 @endsection
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <!-- Search Bar -->
-                <div class="relative">
+
                     <input 
                         type="text" 
                         name="search" 
