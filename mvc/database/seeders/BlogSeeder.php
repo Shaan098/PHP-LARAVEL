@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Tag;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -15,6 +16,22 @@ class BlogSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create sample tags
+        $tags = [
+            ['name' => 'Laravel', 'slug' => 'laravel', 'description' => 'Laravel framework posts'],
+            ['name' => 'PHP', 'slug' => 'php', 'description' => 'PHP programming posts'],
+            ['name' => 'Web Development', 'slug' => 'web-development', 'description' => 'Web development tips and tricks'],
+            ['name' => 'Database', 'slug' => 'database', 'description' => 'Database design and optimization'],
+            ['name' => 'Tutorial', 'slug' => 'tutorial', 'description' => 'Step-by-step tutorials'],
+            ['name' => 'Tips & Tricks', 'slug' => 'tips-tricks', 'description' => 'Helpful tips and tricks'],
+            ['name' => 'API', 'slug' => 'api', 'description' => 'API development posts'],
+            ['name' => 'Testing', 'slug' => 'testing', 'description' => 'Software testing posts'],
+        ];
+
+        foreach ($tags as $tag) {
+            Tag::firstOrCreate(['slug' => $tag['slug']], $tag);
+        }
+
         // Create a test user if it doesn't exist
         $user = User::firstOrCreate(
             ['email' => 'blogger@example.com'],

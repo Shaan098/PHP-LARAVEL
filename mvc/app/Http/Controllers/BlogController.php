@@ -80,7 +80,8 @@ class BlogController extends Controller
     public function create()
     {
         $this->authorize('create', Post::class);
-        return view('blog.create');
+        $allTags = Tag::orderBy('name')->get();
+        return view('blog.create', compact('allTags'));
     }
 
     /**
@@ -96,6 +97,8 @@ class BlogController extends Controller
             'excerpt' => 'nullable|string|max:500',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:draft,published',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
@@ -111,6 +114,11 @@ class BlogController extends Controller
 
         $post = Post::create($validated);
 
+        // Sync tags if provided
+        if ($request->has('tags') && !empty($request->tags)) {
+            $post->tags()->sync($request->tags);
+        }
+
         return redirect()->route('blog.show', $post->slug)->with('success', 'Blog post created successfully!');
     }
 
@@ -120,7 +128,8 @@ class BlogController extends Controller
     public function edit(Post $post)
     {
         $this->authorize('update', $post);
-        return view('blog.edit', compact('post'));
+        $allTags = Tag::orderBy('name')->get();
+        return view('blog.edit', compact('post', 'allTags'));
     }
 
     /**
@@ -136,6 +145,8 @@ class BlogController extends Controller
             'excerpt' => 'nullable|string|max:500',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:draft,published,archived',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
         ]);
 
         if ($request->hasFile('featured_image')) {
@@ -147,6 +158,13 @@ class BlogController extends Controller
         }
 
         $post->update($validated);
+
+        // Sync tags if provided
+        if ($request->has('tags') && !empty($request->tags)) {
+            $post->tags()->sync($request->tags);
+        } else {
+            $post->tags()->detach();
+        }
 
         return redirect()->route('blog.show', $post->slug)->with('success', 'Blog post updated successfully!');
     }
