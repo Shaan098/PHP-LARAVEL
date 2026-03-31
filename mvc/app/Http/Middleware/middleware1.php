@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class middleware1
 {
-    /**
+    /*
      * Handle an incoming request.
      *
      * @param  Closure(Request): (Response)  $next
