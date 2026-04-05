@@ -1,83 +1,169 @@
-
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-12">
-    <div class="max-w-2xl mx-auto">
-        <div class="mb-8">
-            <a href="{{ route('blog.index') }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4 inline-block font-semibold transition-colors">
-                ← Back to Blog
-            </a>
-            <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-2">
-                ✍️ Create New Post
-            </h1>
-            <p class="text-gray-600 dark:text-gray-400">Share your story with the world</p>
-        </div>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 max-w-4xl">
+    <!-- Page Header -->
+    <div class="mb-12">
+        <a href="{{ route('blog.index') }}" class="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white mb-6 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Back to Articles
+        </a>
+        <h1 class="serif-heading text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3">
+            Create New Article
+        </h1>
+        <p class="text-lg text-slate-600 dark:text-slate-400">Share your thoughts and ideas with the world</p>
+    </div>
 
-        <form action="{{ route('blog.store') }}" method="POST" enctype="multipart/form-data" class="bg-white dark:bg-slate-900 p-6 rounded-lg border border-gray-200 dark:border-slate-700 space-y-5">
+    <!-- Form Container -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-8 md:p-12">
+        <form action="{{ route('blog.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
             @csrf
 
-            <!-- Title -->
+            <!-- Title Field -->
             <div>
-                <label for="title" class="block text-slate-900 dark:text-white font-semibold mb-2">Post Title</label>
-                <input type="text" id="title" name="title" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('title') border-red-500 @enderror" value="{{ old('title') }}" placeholder="Enter an engaging title..." required>
+                <label for="title" class="block text-sm font-semibold text-slate-900 dark:text-white mb-3">
+                    Article Title <span class="text-red-500">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title" 
+                    class="input-field text-lg @error('title') border-red-500 @enderror" 
+                    value="{{ old('title') }}" 
+                    placeholder="Enter an engaging title..."
+                    required
+                >
                 @error('title')
-                    <p class="text-red-600 dark:text-red-400 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 dark:text-red-400 text-sm mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Excerpt -->
+            <!-- Excerpt Field -->
             <div>
-                <label for="excerpt" class="block text-slate-900 dark:text-white font-semibold mb-2">Excerpt (Optional)</label>
-                <textarea id="excerpt" name="excerpt" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('excerpt') border-red-500 @enderror" placeholder="Brief summary..." maxlength="500">{{ old('excerpt') }}</textarea>
+                <label for="excerpt" class="block text-sm font-semibold text-slate-900 dark:text-white mb-3">
+                    Excerpt <span class="text-slate-500 text-xs font-normal">(Optional, 100-500 characters)</span>
+                </label>
+                <textarea 
+                    id="excerpt" 
+                    name="excerpt" 
+                    rows="3" 
+                    class="input-field @error('excerpt') border-red-500 @enderror" 
+                    placeholder="Brief summary of your article..."
+                    maxlength="500"
+                >{{ old('excerpt') }}</textarea>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">This will appear as preview text</p>
                 @error('excerpt')
-                    <p class="text-red-600 dark:text-red-400 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 dark:text-red-400 text-sm mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Content -->
+            <!-- Content Field -->
             <div>
-                <label for="content" class="block text-slate-900 dark:text-white font-semibold mb-2">Content</label>
-                <textarea id="content" name="content" rows="12" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('content') border-red-500 @enderror" placeholder="Write your content here..." required>{{ old('content') }}</textarea>
+                <label for="content" class="block text-sm font-semibold text-slate-900 dark:text-white mb-3">
+                    Content <span class="text-red-500">*</span>
+                </label>
+                <textarea 
+                    id="content" 
+                    name="content" 
+                    rows="16" 
+                    class="input-field font-mono @error('content') border-red-500 @enderror" 
+                    placeholder="Write your full article here..."
+                    required
+                >{{ old('content') }}</textarea>
                 @error('content')
-                    <p class="text-red-600 dark:text-red-400 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 dark:text-red-400 text-sm mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
             <!-- Featured Image -->
             <div>
-                <label for="featured_image" class="block text-slate-900 dark:text-white font-semibold mb-2">Featured Image (Optional)</label>
-                <input type="file" id="featured_image" name="featured_image" class="w-full p-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg @error('featured_image') border-red-500 @enderror" accept="image/*">
-                <p class="text-gray-600 dark:text-gray-400 text-xs mt-1">Max 2MB • JPEG, PNG, JPG, GIF</p>
+                <label for="featured_image" class="block text-sm font-semibold text-slate-900 dark:text-white mb-3">
+                    Featured Image <span class="text-slate-500 text-xs font-normal">(Optional)</span>
+                </label>
+                <div class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-8 text-center hover:border-slate-400 dark:hover:border-slate-600 transition-colors cursor-pointer" onclick="document.getElementById('featured_image').click()">
+                    <input 
+                        type="file" 
+                        id="featured_image" 
+                        name="featured_image" 
+                        class="hidden @error('featured_image') border-red-500 @enderror" 
+                        accept="image/*"
+                    >
+                    <svg class="w-12 h-12 text-slate-400 dark:text-slate-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <p class="font-semibold text-slate-900 dark:text-white mb-1">Upload featured image</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Max 2MB • JPEG, PNG, JPG, GIF</p>
+                </div>
                 @error('featured_image')
-                    <p class="text-red-600 dark:text-red-400 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-500 dark:text-red-400 text-sm mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Status -->
-            <div>
-                <label for="status" class="block text-slate-900 dark:text-white font-semibold mb-2">Status</label>
-                <select id="status" name="status" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('status') border-red-500 @enderror" required>
-                    <option value="draft" {{ old('status') === 'draft' ? 'selected' : '' }}>📋 Draft (Save for later)</option>
-                    <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>🚀 Publish Now</option>
-                </select>
-                @error('status')
-                    <p class="text-red-600 dark:text-red-400 text-sm mt-1">{{ $message }}</p>
-                @enderror
+            <!-- Status Field -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="status" class="block text-sm font-semibold text-slate-900 dark:text-white mb-3">
+                        Status <span class="text-red-500">*</span>
+                    </label>
+                    <select 
+                        id="status" 
+                        name="status" 
+                        class="input-field @error('status') border-red-500 @enderror"
+                        required
+                    >
+                        <option value="draft" {{ old('status') === 'draft' ? 'selected' : '' }}>— Draft (Save for later)</option>
+                        <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>— Publish Now</option>
+                    </select>
+                    @error('status')
+                        <p class="text-red-500 dark:text-red-400 text-sm mt-2">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Reading Time -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-900 dark:text-white mb-3">
+                        Estimated Reading Time
+                    </label>
+                    <div class="px-4 py-3 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-400 text-sm">
+                        — minutes (calculated automatically)
+                    </div>
+                </div>
             </div>
 
-            <!-- Tags -->
-            <div>
-                <label class="block text-slate-900 dark:text-white font-semibold mb-2">Tags (Optional)</label>
-                <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">Select tags to categorize your post</p>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    @if(isset($allTags))
+            <!-- Tags Field -->
+            @if(isset($allTags) && count($allTags) > 0)
+                <div>
+                    <label class="block text-sm font-semibold text-slate-900 dark:text-white mb-4">
+                        Topics <span class="text-slate-500 text-xs font-normal">(Select up to 5)</span>
+                    </label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                         @foreach($allTags as $tag)
-                            <label class="flex items-center gap-2 p-2 rounded-lg border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-                                <input type="checkbox" name="tags[]" value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }} class="w-4 h-4 rounded">
-                                <span class="text-slate-900 dark:text-white text-sm">{{ $tag->name }}</span>
+                            <label class="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                                <input 
+                                    type="checkbox" 
+                                    name="tags[]" 
+                                    value="{{ $tag->id }}" 
+                                    {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }}
+                                    class="w-4 h-4 rounded"
+                                >
+                                <span class="text-slate-900 dark:text-white text-sm font-medium">{{ $tag->name }}</span>
                             </label>
                         @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <!-- Form Actions -->
+            <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-slate-200 dark:border-slate-700">
+                <button type="submit" class="btn-primary flex-1 sm:flex-0">
+                    Publish Article
+                </button>
+                <a href="{{ route('blog.index') }}" class="btn-secondary text-center">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
                     @endif
                 </div>
             </div>

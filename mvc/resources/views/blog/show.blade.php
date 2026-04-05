@@ -1,126 +1,129 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-12">
-    <article class="max-w-3xl mx-auto">
-        <!-- Header -->
-        <div class="mb-8">
-            <a href="{{ route('blog.index') }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4 inline-block font-semibold transition-colors">
-                ← Back to Blog
+<div class="bg-white dark:bg-slate-900">
+    <!-- Article Header -->
+    <div class="bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl">
+            <!-- Back Link -->
+            <a href="{{ route('blog.index') }}" class="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white mb-8 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                Back to Articles
             </a>
-            
-            <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-4">
+
+            <!-- Title -->
+            <h1 class="serif-heading text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
                 {{ $post->title }}
             </h1>
-            
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-slate-700">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+
+            <!-- Meta Information -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-8 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-4">
+                    <!-- Author Avatar -->
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white font-bold text-lg">
                         {{ substr($post->author->name, 0, 1) }}
                     </div>
                     <div>
-                        <p class="font-semibold text-slate-900 dark:text-white text-sm">{{ $post->author->name }}</p>
-                        <p class="text-xs text-gray-600 dark:text-gray-400">{{ $post->published_at->format('M d, Y') }}</p>
+                        <p class="font-bold text-slate-900 dark:text-white">{{ $post->author->name }}</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">Published {{ $post->published_at->format('F d, Y') }}</p>
                     </div>
                 </div>
-                
-                <div class="flex flex-wrap gap-2 text-xs">
-                    <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded">
-                        📖 {{ $post->reading_time }} min
-                    </span>
-                    <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 py-1 rounded">
-                        💬 {{ $post->approvedComments()->count() }}
-                    </span>
+
+                <!-- Article Stats -->
+                <div class="flex flex-wrap gap-4">
+                    <div class="text-center">
+                        <p class="text-lg font-bold text-slate-900 dark:text-white">{{ $post->reading_time }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">min read</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-lg font-bold text-slate-900 dark:text-white">{{ $post->approvedComments()->count() }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">comments</p>
+                    </div>
                     @if($post->like_count > 0)
-                        <span class="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-2 py-1 rounded">
-                            ❤️ {{ $post->like_count }}
-                        </span>
+                        <div class="text-center">
+                            <p class="text-lg font-bold text-slate-900 dark:text-white">{{ $post->like_count }}</p>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">likes</p>
+                        </div>
                     @endif
                 </div>
+            </div>
+
+            <!-- Article Actions -->
+            <div class="flex flex-wrap gap-3 mp-6">
+                @auth
+                    <form action="{{ route('blog.bookmark', $post) }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="btn-secondary text-sm px-4 py-2">
+                            Bookmark Article
+                        </button>
+                    </form>
+                @endauth
                 
-                <div class="flex gap-2 items-center">
-                    @auth
-                        <form action="{{ route('blog.bookmark', $post) }}" method="POST" style="display:inline;">
+                @auth
+                    @if(auth()->user()->id === $post->user_id)
+                        <a href="{{ route('blog.edit', $post) }}" class="btn-primary text-sm px-4 py-2">
+                            Edit Article
+                        </a>
+                        <form action="{{ route('blog.destroy', $post) }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">
-                                📚 Bookmark
+                            @method('DELETE')
+                            <button type="submit" class="inline-flex items-center justify-center px-4 py-2 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 rounded-lg font-semibold text-sm border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-950/50 transition-all duration-200" onclick="return confirm('Delete this article?')">
+                                Delete
                             </button>
                         </form>
-                    @endauth
-                    
-                    @auth
-                        @if(auth()->user()->id === $post->user_id)
-                            <a href="{{ route('blog.edit', $post) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">
-                                ✏️ Edit
-                            </a>
-                            <form action="{{ route('blog.destroy', $post) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-semibold transition-colors" onclick="return confirm('Delete?')">
-                                    🗑️ Delete
-                                </button>
-                            </form>
-                        @endif
-                    @endauth
-                </div>
+                    @endif
+                @endauth
             </div>
         </div>
+    </div>
 
-        <!-- Featured Image -->
-        @if($post->featured_image)
-            <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full rounded-lg shadow-md mb-8 hover:shadow-lg transition-shadow">
-        @else
-            <div class="w-full h-72 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg shadow-md mb-8"></div>
+    <!-- Featured Image -->
+    @if($post->featured_image)
+        <div class="bg-slate-100 dark:bg-slate-800">
+            <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full h-auto max-h-96 object-cover">
+        </div>
+    @endif
+
+    <!-- Article Content -->
+    <article class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 max-w-3xl">
+        <!-- Tags -->
+        @if($post->tags->count())
+            <div class="flex flex-wrap gap-2 mb-8">
+                @foreach($post->tags as $tag)
+                    <a href="{{ route('blog.index', ['tag' => $tag->id]) }}" class="inline-block text-sm font-medium px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        {{ $tag->name }}
+                    </a>
+                @endforeach
+            </div>
         @endif
 
-        <!-- Content -->
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-lg mb-8 leading-relaxed text-gray-700 dark:text-gray-300 prose dark:prose-invert max-w-none">
+        <!-- Main Content -->
+        <div class="prose dark:prose-invert max-w-none text-lg leading-relaxed text-slate-700 dark:text-slate-300 mb-12">
             {!! nl2br(e($post->content)) !!}
         </div>
 
         <!-- Author Card -->
-        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-4 rounded-lg mb-8">
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-                Published by <strong class="text-slate-900 dark:text-white">{{ $post->author->name }}</strong> with {{ $post->author->posts()->published()->count() }} posts
-            </p>
-        </div>
-
-        <!-- Tags -->
-        @if($post->tags->count())
-            <div class="mb-8">
-                <div class="flex flex-wrap gap-2">
-                    @foreach($post->tags as $tag)
-                        <a href="{{ route('blog.index', ['tag' => $tag->id]) }}" class="inline-block bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors">
-                            #{{ $tag->name }}
-                        </a>
-                    @endforeach
+        <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-8 mb-12">
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">About the Author</h3>
+            <div class="flex items-start gap-4">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+                    {{ substr($post->author->name, 0, 1) }}
+                </div>
+                <div>
+                    <p class="font-bold text-slate-900 dark:text-white">{{ $post->author->name }}</p>
+                    <p class="text-slate-600 dark:text-slate-400 mt-1">{{ $post->author->posts()->published()->count() }} articles published</p>
+                    @if($post->author->bio)
+                        <p class="text-slate-600 dark:text-slate-400 mt-2">{{ $post->author->bio }}</p>
+                    @endif
                 </div>
             </div>
-        @endif
-
-        <!-- Like Button -->
-        @auth
-            <div class="mb-8">
-                <form action="{{ route('blog.like', $post) }}" method="POST" style="display:inline;">
-                    @csrf
-                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
-                        ❤️ Like ({{ $post->like_count ?? 0 }})
-                    </button>
-                </form>
-            </div>
-        @endauth
+        </div>
 
         <!-- Comments Section -->
-        <section>
-            <h2 class="text-2xl font-bold mb-6 text-slate-900 dark:text-white">
-                💬 Comments ({{ $post->approvedComments()->count() }})
-            </h2>
+        @include('blog.comments', ['post' => $post])
+    </article>
 
-            <!-- Comments List -->
-            @if($comments->count())
-                <div class="space-y-4 mb-8">
-                    @foreach($comments as $comment)
-                        <div class="bg-white dark:bg-slate-900 p-4 rounded-lg border border-gray-200 dark:border-slate-700">
+@endsection
                             <div class="flex justify-between items-start mb-2">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
