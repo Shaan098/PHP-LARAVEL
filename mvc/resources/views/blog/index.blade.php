@@ -1,103 +1,94 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Header Section -->
-    <div class="mb-12">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-10">
-            <div class="flex-1">
-                <h1 class="text-5xl md:text-6xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-200 bg-clip-text text-transparent mb-3">
-                    Discover Stories
-                </h1>
-                <p class="text-lg text-slate-600 dark:text-slate-400">Explore articles and insights from our community</p>
-            </div>
-            @auth
-                <a href="{{ route('blog.create') }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/30 whitespace-nowrap">
-                    <span class="text-lg">✍️</span>
-                    <span>Write a Post</span>
-                </a>
-            @endauth
-        </div>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Page Header -->
+    <div class="text-center mb-16">
+        <h1 class="serif-heading text-5xl md:text-6xl font-bold text-slate-900 dark:text-white mb-4">
+            Reading Room
+        </h1>
+        <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Discover thoughtful articles and stories from our community of writers</p>
+    </div>
 
-        <!-- Search & Filters Card -->
-        <form method="GET" action="{{ route('blog.index') }}" class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-5 hover:shadow-md transition-shadow duration-300">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Search Bar -->
-                <div class="relative">
+    <!-- Search & Filters -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 mb-12 shadow-sm">
+        <form method="GET" action="{{ route('blog.index') }}" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Search -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Search</label>
                     <input 
                         type="text" 
                         name="search" 
-                        placeholder="🔍 Search posts..." 
+                        placeholder="Find articles..." 
                         value="{{ request('search') }}"
-                        class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder:text-slate-400"
+                        class="input-field"
                     >
                 </div>
                 
-                <!-- Filter by Author -->
-                <select name="author" class="px-4 py-3 border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer bg-white dark:bg-slate-800">
-                    <option value="">👥 All Authors</option>
-                    @foreach($authors as $author)
-                        <option value="{{ $author->id }}" {{ request('author') == $author->id ? 'selected' : '' }}>
-                            {{ $author->name }}
-                        </option>
-                    @endforeach
-                </select>
+                <!-- Author Filter -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Author</label>
+                    <select name="author" class="input-field appearance-none bg-white dark:bg-slate-900 pr-10">
+                        <option value="">All Authors</option>
+                        @foreach($authors as $author)
+                            <option value="{{ $author->id }}" {{ request('author') == $author->id ? 'selected' : '' }}>
+                                {{ $author->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 
-                <!-- Filter by Tags -->
-                <select name="tag" class="px-4 py-3 border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer bg-white dark:bg-slate-800">
-                    <option value="">🏷️ All Tags</option>
-                    @foreach($tags as $tag)
-                        <option value="{{ $tag->id }}" {{ request('tag') == $tag->id ? 'selected' : '' }}>
-                            {{ $tag->name }}
-                        </option>
-                    @endforeach
-                </select>
+                <!-- Tag Filter -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Topic</label>
+                    <select name="tag" class="input-field appearance-none bg-white dark:bg-slate-900 pr-10">
+                        <option value="">All Topics</option>
+                        @foreach($tags as $tag)
+                            <option value="{{ $tag->id }}" {{ request('tag') == $tag->id ? 'selected' : '' }}>
+                                {{ $tag->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Sort Options -->
-                <select name="sort" class="px-4 py-3 border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer bg-white dark:bg-slate-800">
-                    <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>⏱️ Latest First</option>
-                    <option value="popular" {{ request('sort') === 'popular' ? 'selected' : '' }}>🔥 Most Popular</option>
-                    <option value="trending" {{ request('sort') === 'trending' ? 'selected' : '' }}>⚡ Trending</option>
-                </select>
-                
-                <div class="flex gap-3">
-                    <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-3 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg">
-                        🔍 Search
-                    </button>
-                    <a href="{{ route('blog.index') }}" class="bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white px-4 py-3 rounded-lg font-semibold transition-all duration-200">
-                        ↻ Reset
-                    </a>
+            <div class="flex items-end gap-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Sort By</label>
+                    <select name="sort" class="input-field appearance-none bg-white dark:bg-slate-900 pr-10">
+                        <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>Latest Published</option>
+                        <option value="popular" {{ request('sort') === 'popular' ? 'selected' : '' }}>Most Popular</option>
+                        <option value="trending" {{ request('sort') === 'trending' ? 'selected' : '' }}>Trending Now</option>
+                    </select>
                 </div>
+                
+                <button type="submit" class="btn-primary text-sm">
+                    Apply Filters
+                </button>
+                <a href="{{ route('blog.index') }}" class="btn-secondary text-sm">
+                    Clear
+                </a>
             </div>
         </form>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main Content -->
-        <div class="lg:col-span-2">
-            <!-- Posts Grid -->
-            @if($posts->count())
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    @foreach($posts as $post)
-                        <article class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                            <!-- Image Container -->
-                            <div class="relative h-48 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-900/50 overflow-hidden">
-                                @if($post->featured_image)
-                                    <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                @else
-                                    <div class="w-full h-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center">
-                                        <span class="text-5xl">📝</span>
-                                    </div>
-                                @endif
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <div class="absolute top-3 right-3">
-                                    <span class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-slate-900 dark:text-white text-xs px-3 py-1.5 rounded-full font-semibold">
-                                        📖 {{ $post->reading_time }} min read
-                                    </span>
-                                </div>
+    <!-- Main Content Grid -->
+    @if($posts->count())
+        <!-- Posts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            @foreach($posts as $post)
+                <article class="group card-hover bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+                    <!-- Featured Image -->
+                    <div class="relative h-48 bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                        @if($post->featured_image)
+                            <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        @else
+                            <div class="w-full h-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center">
+                                <svg class="w-16 h-16 text-white/30" fill="currentColor" viewBox="0 0 24 24"><path d="M11 3a8 8 0 100 16 8 8 0 000-16zM2 11a9 9 0 1118 0 9 9 0 01-18 0z"/></svg>
                             </div>
+                        @endif
+                    </div>
                             
                             <!-- Content -->
                             <div class="p-5">
