@@ -120,27 +120,25 @@
 
     <!-- Flash Messages -->
     @if ($message = session('success'))
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-            <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-l-4 border-green-500 dark:border-green-400 text-green-700 dark:text-green-300 p-4 rounded-r-lg shadow-md animate-bounce">
-                <div class="flex items-center gap-3">
-                    <span class="text-xl">✅</span>
-                    <div>
-                        <p class="font-bold text-lg">Success</p>
-                        <p class="text-sm">{{ $message }}</p>
-                    </div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            <div class="bg-emerald-50 dark:bg-emerald-950/30 border-l-4 border-emerald-500 dark:border-emerald-400 text-emerald-800 dark:text-emerald-200 p-4 rounded-r-lg shadow-md flex items-start gap-3 animate-slide-down">
+                <svg class="w-6 h-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                <div>
+                    <p class="font-semibold">Success</p>
+                    <p class="text-sm">{{ $message }}</p>
                 </div>
             </div>
         </div>
     @endif
 
     @if ($errors->any())
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-            <div class="bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-l-4 border-red-500 dark:border-red-400 text-red-700 dark:text-red-300 p-4 rounded-r-lg shadow-md animate-bounce">
-                <div class="flex items-center gap-3">
-                    <span class="text-xl">❌</span>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            <div class="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-500 dark:border-red-400 text-red-800 dark:text-red-200 p-4 rounded-r-lg shadow-md animate-slide-down">
+                <div class="flex items-start gap-3">
+                    <svg class="w-6 h-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
                     <div>
-                        <p class="font-bold text-lg">Errors Occurred</p>
-                        <ul class="text-sm space-y-1 mt-1">
+                        <p class="font-semibold">Errors Occurred</p>
+                        <ul class="text-sm space-y-1 mt-2">
                             @foreach ($errors->all() as $error)
                                 <li>• {{ $error }}</li>
                             @endforeach
