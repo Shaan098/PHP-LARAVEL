@@ -19,7 +19,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/blog/{post}/edit', [BlogController::class, 'edit'])->name('blog.edit');
     Route::put('/blog/{post}', [BlogController::class, 'update'])->name('blog.update');
     Route::delete('/blog/{post}', [BlogController::class, 'destroy'])->name('blog.destroy');
-    
     // Like and bookmark routes
     Route::post('/blog/{post}/like', [BlogController::class, 'likePost'])->name('blog.like');
     Route::post('/blog/{post}/bookmark', [BlogController::class, 'bookmarkPost'])->name('blog.bookmark');
