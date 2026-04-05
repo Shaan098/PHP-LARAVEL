@@ -7,31 +7,45 @@
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Georgia:wght@400;700&display=swap');
         
-        html, body, * {
-            font-family: 'Inter', sans-serif;
+        html, body {
+            font-family: 'Poppins', sans-serif;
         }
 
-        /* Smooth transitions */
+        .serif-heading {
+            font-family: 'Georgia', serif;
+            letter-spacing: -1px;
+        }
+
         body {
             @apply transition-colors duration-300;
         }
 
-        /* Tailwind animations with custom variants */
-        .animate-fade-in-up {
-            @apply animate-pulse;
+        .card-hover {
+            @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
         }
 
-        .article-card {
-            @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-2;
+        .smooth-gradient {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f5f5f7 100%);
         }
 
-        .btn-transition {
-            @apply transition-all duration-200 hover:scale-105;
+        .smooth-gradient-dark {
+            background: linear-gradient(135deg, #0f172a 0%, #0e2942 100%);
         }
 
-        /* Dark mode support */
+        .btn-primary {
+            @apply inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg;
+        }
+
+        .btn-secondary {
+            @apply inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg font-semibold transition-all duration-200 hover:bg-slate-50 dark:hover:bg-slate-700;
+        }
+
+        .input-field {
+            @apply w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all;
+        }
+
         :root {
             color-scheme: light;
         }
@@ -41,7 +55,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 text-slate-900 dark:text-slate-100">
+<body class="smooth-gradient dark:smooth-gradient-dark text-slate-900 dark:text-slate-100">
     <!-- Dark Mode Toggle Script -->
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
