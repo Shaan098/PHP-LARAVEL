@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function () {
     // Like and bookmark routes
     Route::post('/blog/{post}/like', [BlogController::class, 'likePost'])->name('blog.like');
     Route::post('/blog/{post}/bookmark', [BlogController::class, 'bookmarkPost'])->name('blog.bookmark');
-    
+
     // User bookmarks
     Route::get('/bookmarks', [UserController::class, 'bookmarks'])->name('user.bookmarks');
 });
