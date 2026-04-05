@@ -10,10 +10,8 @@ Route::get('/', function () {
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::post('/blog/{post}/comments', [BlogController::class, 'storeComment'])->name('blog.comments.store');
-
 // User profile routes
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
-
 // Protected blog routes (require authentication)
 Route::middleware('auth')->group(function () {
     Route::get('/blog/create', [BlogController::class, 'create'])->name('blog.create');
