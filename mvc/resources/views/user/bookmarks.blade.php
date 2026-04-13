@@ -24,7 +24,7 @@
                         @if($bookmark->post->featured_image)
                             <img src="{{ asset('storage/' . $bookmark->post->featured_image) }}" alt="{{ $bookmark->post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         @else
-                            <div class="w-full h-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center">
+                            <div class="w-full h-full bg-linear-to-br from-slate-400 to-slate-600 flex items-center justify-center">
                                 <svg class="w-16 h-16 text-white/30" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
                             </div>
                         @endif
@@ -34,7 +34,7 @@
                     <div class="flex flex-col flex-1 p-6">
                         <!-- Author & Date -->
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white text-sm font-semibold">
+                            <div class="w-8 h-8 rounded-full bg-linear-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white text-sm font-semibold">
                                 {{ substr($bookmark->post->author->name, 0, 1) }}
                             </div>
                             <div>

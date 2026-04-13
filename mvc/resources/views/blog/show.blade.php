@@ -3,7 +3,7 @@
 @section('content')
 <div class="bg-white dark:bg-slate-900">
     <!-- Article Header -->
-    <div class="bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700">
+    <div class="bg-linear-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl">
             <!-- Back Link -->
             <a href="{{ route('blog.index') }}" class="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white mb-8 transition-colors">
@@ -20,7 +20,7 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-8 border-b border-slate-200 dark:border-slate-700">
                 <div class="flex items-center gap-4">
                     <!-- Author Avatar -->
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white font-bold text-lg">
+                    <div class="w-12 h-12 rounded-full bg-linear-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white font-bold text-lg">
                         {{ substr($post->author->name, 0, 1) }}
                     </div>
                     <div>
@@ -106,7 +106,7 @@
         <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-8 mb-12">
             <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">About the Author</h3>
             <div class="flex items-start gap-4">
-                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+                <div class="w-16 h-16 rounded-full bg-linear-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white text-xl font-bold shrink-0">
                     {{ substr($post->author->name, 0, 1) }}
                 </div>
                 <div>
@@ -209,7 +209,7 @@
         @if($post->featured_image)
             <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full rounded-xl shadow-2xl mb-8 hover:shadow-2xl transition-shadow duration-300">
         @else
-            <div class="w-full h-96 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-600 rounded-xl shadow-2xl mb-8"></div>
+            <div class="w-full h-96 bg-linear-to-br from-blue-400 via-purple-500 to-pink-600 rounded-xl shadow-2xl mb-8"></div>
         @endif
 
         <!-- Content -->

@@ -204,7 +204,7 @@
 
             <!-- Actions -->
             <div class="flex gap-4 pt-6 border-t border-gray-200 dark:border-slate-700">
-                <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-bold btn-transition shadow-lg hover:shadow-xl transition-all">
+                <button type="submit" class="flex-1 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-bold btn-transition shadow-lg hover:shadow-xl transition-all">
                     ✨ Update Post
                 </button>
                 <a href="{{ route('blog.show', $post->slug) }}" class="flex-1 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-800 dark:text-white px-8 py-3 rounded-lg font-bold btn-transition transition-colors text-center">

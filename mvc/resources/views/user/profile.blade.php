@@ -6,7 +6,7 @@
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 md:p-12 mb-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <!-- Avatar & Name -->
         <div class="flex flex-col items-center md:items-start">
-            <div class="w-32 h-32 rounded-full bg-gradient-to-br from-slate-400 via-slate-500 to-slate-600 flex items-center justify-center text-white text-5xl font-bold shadow-lg mb-6">
+            <div class="w-32 h-32 rounded-full bg-linear-to-br from-slate-400 via-slate-500 to-slate-600 flex items-center justify-center text-white text-5xl font-bold shadow-lg mb-6">
                 {{ substr($user->name, 0, 1) }}
             </div>
             <h1 class="serif-heading text-4xl font-bold text-slate-900 dark:text-white mb-2">
@@ -78,7 +78,7 @@
                                     {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 100) }}
                                 </p>
                             </div>
-                            <div class="text-right flex-shrink-0">
+                            <div class="text-right shrink-0">
                                 <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">{{ $post->published_at->format('M d, Y') }}</p>
                                 <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">{{ $post->reading_time }} min read</p>
                             </div>
@@ -135,11 +135,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 @foreach($posts as $post)
                     <article class="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-shadow">
-                        <div class="relative h-40 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-900/50">
+                        <div class="relative h-40 bg-linear-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-900/50">
                             @if($post->featured_image)
                                 <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                             @else
-                                <div class="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                                <div class="w-full h-full bg-linear-to-br from-blue-400 to-blue-600"></div>
                             @endif
                         </div>
                         
