@@ -24,3 +24,13 @@ Route::middleware('auth')->group(function () {
     // User bookmarks
     Route::get('/bookmarks', [UserController::class, 'bookmarks'])->name('user.bookmarks');
 });
+
+// Authentication routes
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
+    Route::get('/register', function () {
+        return view('auth.register');
+    })->name('register');
+});

@@ -92,18 +92,3 @@
     @endif
 </div>
 @endsection
-
-        <div class="mt-8">
-            {{ $bookmarks->links() }}
-        </div>
-    @else
-        <div class="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200 px-6 py-12 rounded-lg text-center">
-            <p class="text-lg font-semibold mb-2">📭 No Bookmarks Yet</p>
-            <p class="mb-4">Bookmark posts to read them later</p>
-            <a href="{{ route('blog.index') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
-                Explore Posts
-            </a>
-        </div>
-    @endif
-</div>
-@endsection

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Articulate - A Modern Blogging Platform</title>
     
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Georgia:wght@400;700&display=swap');
         
@@ -47,22 +47,22 @@
     <nav class="fixed top-0 left-0 right-0 z-50 bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 shadow-sm">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="{{ route('blog.index') }}" class="text-xl font-bold serif-heading text-slate-900 dark:text-white hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
+                <a href="<?php echo e(route('blog.index')); ?>" class="text-xl font-bold serif-heading text-slate-900 dark:text-white hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
                     Articulate
                 </a>
                 <div class="flex items-center gap-4">
-                    @auth
-                        <a href="{{ route('blog.index') }}" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors">
+                    <?php if(auth()->guard()->check()): ?>
+                        <a href="<?php echo e(route('blog.index')); ?>" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors">
                             Start Reading
                         </a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors">
+                    <?php else: ?>
+                        <a href="<?php echo e(route('login')); ?>" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors">
                             Sign In
                         </a>
-                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 rounded-lg font-semibold transition-all duration-200">
+                        <a href="<?php echo e(route('register')); ?>" class="inline-flex items-center justify-center px-6 py-2.5 bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 rounded-lg font-semibold transition-all duration-200">
                             Get Started
                         </a>
-                    @endauth
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -81,18 +81,18 @@
                 A modern, elegant blogging platform designed for thoughtful writers and engaged readers.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                @auth
-                    <a href="{{ route('blog.create') }}" class="inline-flex items-center justify-center px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg font-semibold text-lg hover:shadow-lg hover:shadow-slate-900/20 dark:hover:shadow-white/20 transition-all duration-300 hover:-translate-y-1">
+                <?php if(auth()->guard()->check()): ?>
+                    <a href="<?php echo e(route('blog.create')); ?>" class="inline-flex items-center justify-center px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg font-semibold text-lg hover:shadow-lg hover:shadow-slate-900/20 dark:hover:shadow-white/20 transition-all duration-300 hover:-translate-y-1">
                         Start Writing
                     </a>
-                @else
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg font-semibold text-lg hover:shadow-lg hover:shadow-slate-900/20 dark:hover:shadow-white/20 transition-all duration-300 hover:-translate-y-1">
+                <?php else: ?>
+                    <a href="<?php echo e(route('register')); ?>" class="inline-flex items-center justify-center px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg font-semibold text-lg hover:shadow-lg hover:shadow-slate-900/20 dark:hover:shadow-white/20 transition-all duration-300 hover:-translate-y-1">
                         Create Account
                     </a>
-                    <a href="{{ route('blog.index') }}" class="inline-flex items-center justify-center px-8 py-4 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg font-semibold text-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all duration-300 hover:-translate-y-1">
+                    <a href="<?php echo e(route('blog.index')); ?>" class="inline-flex items-center justify-center px-8 py-4 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg font-semibold text-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all duration-300 hover:-translate-y-1">
                         Browse Articles
                     </a>
-                @endauth
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -144,15 +144,15 @@
             <p class="text-lg text-slate-200 dark:text-slate-700 mb-8">
                 Join our community of writers and start publishing beautiful articles today.
             </p>
-            @guest
-                <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <?php if(auth()->guard()->guest()): ?>
+                <a href="<?php echo e(route('register')); ?>" class="inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                     Get Started Free
                 </a>
-            @else
-                <a href="{{ route('blog.create') }}" class="inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <?php else: ?>
+                <a href="<?php echo e(route('blog.create')); ?>" class="inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                     Write Your First Article
                 </a>
-            @endguest
+            <?php endif; ?>
         </div>
     </section>
 
@@ -195,3 +195,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Users\DELL\Desktop\PHP LARAVEL\mvc\resources\views/welcome.blade.php ENDPATH**/ ?>
